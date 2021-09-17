@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, Switch } from "react-router";
+import LoginPage from "./features/auth/pages/LoginPage";
+import PrivateRoute from "./components/PrivateRoute";
+import Dashboard from "./features/dashboard/components/Dashboard";
+import EditUser from "./features/users/pages/EditUser";
+import AllUsers from "./features/users/pages/AllUsers";
+import AllProducts from "./features/products/pages/AllProducts.";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Switch>
+        <Route path="/login" exact>
+          <LoginPage />
+        </Route>
+        <PrivateRoute path="/" exact component={Dashboard} />
+        <PrivateRoute path="/users" exact component={AllUsers} />
+        <PrivateRoute path="/products" exact component={AllProducts} />
+        <PrivateRoute path="/user/:id" exact component={EditUser} />
+
+      </Switch>
     </div>
   );
 }
