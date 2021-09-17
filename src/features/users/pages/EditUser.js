@@ -35,6 +35,7 @@ const EditUser = () => {
   }, [id]);
 
   function updateUserHandler(userData) {
+    
     const sendPostRequest = async (userData) => {
       try {
         const response = await api("/admin-api/user/" + id, {

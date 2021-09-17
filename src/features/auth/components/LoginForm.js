@@ -10,7 +10,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
+import Link from "@mui/material/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -80,27 +80,28 @@ const LoginForm = () => {
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
 
-    setIsLoading(true);
-    setSuccess(false);
     const sendPostRequest = async () => {
       
-      await api.get("/sanctum/csrf-cookie").then((response) => {
-        api
-          .post("/admin-api/login", {
-            email: enteredEmail,
-            password: enteredPassword,
-          })
-          .then((response) => {
-            setSuccess(true);
-            setIsLoading(false);
-            authCtx.login(response.data.data.token);
-            history.replace("/");
-          })
-          .catch((error) => {
-            setIsLoading(false);
-            alert(error.response.data.message);
-          });
-      });
+      try {
+        setIsLoading(true);
+        setSuccess(false);
+        const response = await api("/admin-api/login", {
+          method: "post",
+          data: { email: enteredEmail, password: enteredPassword},
+        });
+
+        if (response.data.success === true) {
+          setSuccess(true);
+          authCtx.login(response.data.data.token);
+          history.replace("/");
+
+          //   Maybe history.replace('/users');
+        }
+      } catch (error) {
+        // Handle Error Here
+        console.log(error);
+      }
+      setIsLoading(false);
     };
 
     sendPostRequest();

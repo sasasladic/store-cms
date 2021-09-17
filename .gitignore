@@ -38,4 +38,5 @@ yarn-error.log*
 .history
 .ionide
 
+### IDEA ###
 .idea
