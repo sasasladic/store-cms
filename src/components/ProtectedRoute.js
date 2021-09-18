@@ -9,7 +9,7 @@ import AuthContext from "../store/auth-context";
 import { Redirect, Route } from "react-router-dom";
 import Layout from "./Layout/Layout";
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const ProtectedRoute = ({ component: Component, ...rest }) => {
   // Add your own authentication on the below line.
   const authCtx = useContext(AuthContext);
 
@@ -29,4 +29,4 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   );
 };
 
-export default PrivateRoute;
+export default ProtectedRoute;
