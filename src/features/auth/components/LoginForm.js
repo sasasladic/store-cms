@@ -85,7 +85,7 @@ const LoginForm = () => {
       try {
         setIsLoading(true);
         setSuccess(false);
-        const response = await api("/admin-api/login", {
+        const response = await api()("/login", {
           method: "post",
           data: { email: enteredEmail, password: enteredPassword},
         });

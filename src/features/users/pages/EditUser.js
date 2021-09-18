@@ -22,7 +22,7 @@ const EditUser = () => {
     const getUserDetails = async () => {
       showLoader();
       try {
-        const response = await api({ url: "/admin-api/user/" + id + "/edit" });
+        const response = await api()({ url: "/user/" + id + "/edit" });
         setData(response.data.data);
         setRoles(response.data.role);
       } catch (error) {
@@ -38,7 +38,7 @@ const EditUser = () => {
     
     const sendPostRequest = async (userData) => {
       try {
-        const response = await api("/admin-api/user/" + id, {
+        const response = await api()("/user/" + id, {
           method: "patch",
           data: userData,
         });
