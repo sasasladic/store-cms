@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = (history = null) => {
-  const baseURL = process.env.REACT_APP_LOCAL_BACKEND_URL;
+  const baseURL = process.env.REACT_APP_BACKEND_URL;
   let headers = {};
 
   if (localStorage.token) {
