@@ -17,6 +17,7 @@ function App() {
             path={route.path}
             exact
             component={route.component}
+            title={route.title}
           ></ProtectedRoute>
         ))}
       </Switch>

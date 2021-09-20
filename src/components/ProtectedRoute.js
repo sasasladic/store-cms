@@ -13,6 +13,8 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   // Add your own authentication on the below line.
   const authCtx = useContext(AuthContext);
 
+  document.title = rest.title || "Store App";
+
   return (
     <Route
       {...rest}

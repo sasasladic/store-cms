@@ -1,4 +1,4 @@
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { IconButton } from "@material-ui/core";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import Chip from '@mui/material/Chip';

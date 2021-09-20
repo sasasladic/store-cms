@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Box from "@material-ui/core/Box";
+import Box from "@mui/material/Box";
 import Container from "@material-ui/core/Container";
 import Header from "../Header/Header";
 import LeftSidebar from "../Sidebar/LeftSidebar";
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
-  }
+  },
 }));
 
 const MainNavigation = (props) => {
@@ -42,12 +42,23 @@ const MainNavigation = (props) => {
     <div className={classes.root}>
       <CssBaseline />
       <Header openedSidebar={sidebarOpen} openSidebar={handleDrawerOpen} />
-      <LeftSidebar openedSidebar={sidebarOpen} closeSidebar={handleDrawerClose} />
+      <LeftSidebar
+        openedSidebar={sidebarOpen}
+        closeSidebar={handleDrawerClose}
+      />
 
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth='xl' className={classes.container}>
-          {props.children}
+        <Container maxWidth="xl" className={classes.container}>
+          <Box
+            sx={{
+              width: "100%",
+              backgroundColor: "#fff",
+            }}
+          >
+            {props.children}
+          </Box>
+
           <Box pt={4}>
             <Copyright />
           </Box>
