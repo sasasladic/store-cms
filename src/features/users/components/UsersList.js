@@ -5,8 +5,21 @@ import DeleteOutlineTwoToneIcon from "@mui/icons-material/DeleteOutlineTwoTone";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import { Link } from "react-router-dom";
 import { Chip, Box, IconButton } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles({
+  usersList: {
+    "& .red": {
+      border: "1px solid #e06767 !important",
+    },
+    "& .center": {
+      textAlign: "center !important",
+    },
+  }
+});
 
 const UsersList = (props) => {
+  const classes = useStyles();
 
   const columns = [
     {
@@ -67,6 +80,7 @@ const UsersList = (props) => {
       field: "deleted_at",
       headerName: "Deleted At",
       minWidth: 170,
+      valueGetter: (params) => params.value ?? '/'
     },
     {
       field: "action",
@@ -74,6 +88,7 @@ const UsersList = (props) => {
       minWidth: 214,
       iconSeparator: false,
       renderCell: (params) => {
+        console.log(params);
         return (
           <Box>
             <Link to={"user/" + params.id}>
@@ -81,12 +96,16 @@ const UsersList = (props) => {
                 <EditTwoToneIcon color="primary" />
               </IconButton>
             </Link>
+            
             <IconButton
+              disabled={params.row.deleted_at}
+              color={params.row.deleted_at ? 'primary' : 'error'}
               aria-label="delete"
               onClick={() => props.deleteUserHandler(params.id)}
             >
-              <DeleteOutlineTwoToneIcon color="error" />
+              <DeleteOutlineTwoToneIcon/>
             </IconButton>
+           
             <IconButton aria-label="view">
               <VisibilityOutlinedIcon color="primary" />
             </IconButton>
@@ -96,31 +115,36 @@ const UsersList = (props) => {
     },
   ];
 
-
   return (
-    <DataGrid
-      rows={props.users}
-      columns={columns.map((column) => ({
-        ...column,
-        sortable: false,
-      }))}
+    <div className={classes.usersList}>
 
-      pagination
-      paginationMode="server"
-
-      page={props.currentTablePage}
-      pageSize={props.metaData.per_page}
-      rowsPerPageOptions={[props.metaData.per_page]}
-      rowCount={props.metaData.total}
-
-
-      onPageChange={(newPage) => props.pageChangeHandler(newPage + 1)}
-      maxColumns={6}
-      autoHeight
-      loading={props.loading}
-      disableColumnMenu
-      density="comfortable"
-    />
+      <DataGrid
+        rows={props.users}
+        columns={columns.map((column) => ({
+          ...column,
+          sortable: false,
+        }))}
+        pagination
+        paginationMode="server"
+        page={props.currentTablePage}
+        pageSize={props.metaData.per_page}
+        rowsPerPageOptions={[props.metaData.per_page]}
+        rowCount={props.metaData.total}
+        onPageChange={(newPage) => props.pageChangeHandler(newPage + 1)}
+        maxColumns={6}
+        autoHeight
+        loading={props.loading}
+        disableColumnMenu
+        density="comfortable"
+        getCellClassName={(params) => {
+          if (params.field === "deleted_at" && params.value !== '/') {
+            return "red";
+          }else{
+            return "center"
+          }
+        }}
+      />
+      </div>
   );
 };
 
