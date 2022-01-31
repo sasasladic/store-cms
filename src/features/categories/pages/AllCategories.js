@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import UserList from "../components/UsersList";
+import CategoryList from "../components/CategoryList";
 import api from "../../../services/api";
 import { useHistory } from "react-router";
 import TableButtons from "../../../components/Elements/Table/TableButtons";
 
-const AllUsers = () => {
+const AllCategories = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [loadedUsers, setLoadedUsers] = useState([]);
+  const [loadedCategories, setLoadedCategories] = useState([]);
   const [metaData, setMetaData] = useState([]);
   const history = useHistory();
 
@@ -44,15 +44,15 @@ const AllUsers = () => {
   };
 
   useEffect(() => {
-    const getUsers = async () => {
+    const getCategories = async () => {
       showLoader();
 
       try {
         const response = await api(history)(
-          `/user?filter[name]=${pageSearch.searchTerm}&page=${pageSearch.page}`
+          `/category?filter[name]=${pageSearch.searchTerm}&page=${pageSearch.page}`
         );
         if (response && response.data) {
-          setLoadedUsers(response.data.data);
+          setLoadedCategories(response.data.data);
           setMetaData(response.data.meta);
           const currentPage = response.data.meta.current_page - 1;
           setCurrentTablePage(currentPage);
@@ -63,13 +63,12 @@ const AllUsers = () => {
       hideLoader();
     };
 
-    getUsers();
-    window.scrollTo(0, 0);
+    getCategories();
   }, [history, pageSearch]);
 
-  const deleteUserHandler = async (id) => {
+  const deleteCategoryHandler = async (id) => {
     try {
-      const response = await api()("/user/" + id, {
+      const response = await api()("/category/" + id, {
         method: "delete",
       });
 
@@ -85,20 +84,19 @@ const AllUsers = () => {
       console.error(err);
     }
   };
-
   return (
     <div>
-      <TableButtons searchChangeHandler={searchChangeHandler} addNewLink={"/user/create"}/>
-      <UserList
-        users={loadedUsers}
-        loading={isLoading}
-        metaData={metaData}
-        currentTablePage={currentTablePage}
-        pageChangeHandler={pageChangeHandler}
-        deleteUserHandler={deleteUserHandler}
-      />
-    </div>
+    <TableButtons searchChangeHandler={searchChangeHandler} addNewLink={"/category/create"}/>
+    <CategoryList
+      categories={loadedCategories}
+      loading={isLoading}
+      metaData={metaData}
+      currentTablePage={currentTablePage}
+      pageChangeHandler={pageChangeHandler}
+      deleteCategoryHandler={deleteCategoryHandler}
+    />
+  </div>
   );
 };
 
-export default AllUsers;
+export default AllCategories;

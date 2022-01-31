@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from "react";
-import UserList from "../components/UsersList";
-import api from "../../../services/api";
 import { useHistory } from "react-router";
+import { useParams } from "react-router-dom";
+import api from "../../../services/api";
+import ProductVariantsList from "../components/ProductVariantsList";
 import TableButtons from "../../../components/Elements/Table/TableButtons";
 
-const AllUsers = () => {
+const AllProductVariants = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [loadedUsers, setLoadedUsers] = useState([]);
+  const [data, setData] = useState([]);
   const [metaData, setMetaData] = useState([]);
   const history = useHistory();
+  const { id } = useParams();
+  const [attributes, setAttributes] = useState([]);
 
   const [pageSearch, setPageSearch] = useState({ page: 1, searchTerm: "" });
   const [searchPerformed, setSearchPerformed] = useState(true);
   const [currentTablePage, setCurrentTablePage] = useState(0);
 
+  const backButton = { url: '/products', label: "All products" };
+
+
   const showLoader = () => {
     setIsLoading(true);
   };
-
   const hideLoader = () => {
     setIsLoading(false);
   };
@@ -32,11 +37,12 @@ const AllUsers = () => {
   };
 
   const pageChangeHandler = (pageId) => {
+    console.log(pageId);
     //Need to be here
     if (pageSearch.searchTerm === "") {
       setSearchPerformed(false);
     }
-    
+
     setPageSearch((prevState) => ({
       ...prevState,
       page: pageId,
@@ -44,61 +50,46 @@ const AllUsers = () => {
   };
 
   useEffect(() => {
-    const getUsers = async () => {
+    const getProductVariants = async () => {
       showLoader();
-
       try {
         const response = await api(history)(
-          `/user?filter[name]=${pageSearch.searchTerm}&page=${pageSearch.page}`
+          `/product/${id}/variant?filter[optionValues.value]=${pageSearch.searchTerm}&page=${pageSearch.page}`
         );
+        console.log(response);
         if (response && response.data) {
-          setLoadedUsers(response.data.data);
+          setData(response.data.data);
+          setAttributes(response.data.attributes);
           setMetaData(response.data.meta);
           const currentPage = response.data.meta.current_page - 1;
           setCurrentTablePage(currentPage);
         }
       } catch (error) {
-        alert(error.response?.data?.message);
+        alert(error.response.data.message);
       }
       hideLoader();
     };
 
-    getUsers();
-    window.scrollTo(0, 0);
-  }, [history, pageSearch]);
-
-  const deleteUserHandler = async (id) => {
-    try {
-      const response = await api()("/user/" + id, {
-        method: "delete",
-      });
-
-      if (response.data.success === true) {
-        alert(response.data.message);
-        window.location.reload();
-      } else {
-        //Red alert
-        alert(response.data.message);
-      }
-    } catch (err) {
-      // Handle Error Here
-      console.error(err);
-    }
-  };
+    getProductVariants();
+  }, [history, pageSearch, id]);
 
   return (
     <div>
-      <TableButtons searchChangeHandler={searchChangeHandler} addNewLink={"/user/create"}/>
-      <UserList
-        users={loadedUsers}
+      <TableButtons
+        backButton={backButton}
+        searchChangeHandler={searchChangeHandler}
+        addNewLink={`/product/${id}/variants/create`}
+      />
+      <ProductVariantsList
         loading={isLoading}
-        metaData={metaData}
+        attributes={attributes}
+        productVariants={data}
         currentTablePage={currentTablePage}
+        metaData={metaData}
         pageChangeHandler={pageChangeHandler}
-        deleteUserHandler={deleteUserHandler}
       />
     </div>
   );
 };
 
-export default AllUsers;
+export default AllProductVariants;

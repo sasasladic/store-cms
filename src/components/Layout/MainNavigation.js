@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     height: "100vh",
     overflow: "auto",
-    // backgroundColor: '#fff'
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -49,16 +48,17 @@ const MainNavigation = (props) => {
 
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="xl" className={classes.container}>
-          <Box
+        <Container maxWidth="xl" className={classes.container} sx={{ mt: 4, mb: 4 }}>
+          <div style={{backgroundColor: "#fff"}}>
+          {/* <Box
             sx={{
-              width: "100%",
+              width: "99%",
               backgroundColor: "#fff",
             }}
-          >
+          > */}
             {props.children}
-          </Box>
-
+          {/* </Box> */}
+          </div>
           <Box pt={4}>
             <Copyright />
           </Box>

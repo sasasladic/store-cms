@@ -1,13 +1,15 @@
+import { render } from "@testing-library/react";
 import React, { useState, useEffect } from "react";
-import UserList from "../components/UsersList";
-import api from "../../../services/api";
 import { useHistory } from "react-router";
+import api from "../../../services/api";
 import TableButtons from "../../../components/Elements/Table/TableButtons";
+import AttributesList from "../components/AttributesList";
+import { Box } from "@mui/material";
 
-const AllUsers = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadedUsers, setLoadedUsers] = useState([]);
+const AllAttributes = () => {
+  const [attributes, setAttributes] = useState([]);
   const [metaData, setMetaData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
 
   const [pageSearch, setPageSearch] = useState({ page: 1, searchTerm: "" });
@@ -17,7 +19,6 @@ const AllUsers = () => {
   const showLoader = () => {
     setIsLoading(true);
   };
-
   const hideLoader = () => {
     setIsLoading(false);
   };
@@ -36,40 +37,16 @@ const AllUsers = () => {
     if (pageSearch.searchTerm === "") {
       setSearchPerformed(false);
     }
-    
+
     setPageSearch((prevState) => ({
       ...prevState,
       page: pageId,
     }));
   };
 
-  useEffect(() => {
-    const getUsers = async () => {
-      showLoader();
-
-      try {
-        const response = await api(history)(
-          `/user?filter[name]=${pageSearch.searchTerm}&page=${pageSearch.page}`
-        );
-        if (response && response.data) {
-          setLoadedUsers(response.data.data);
-          setMetaData(response.data.meta);
-          const currentPage = response.data.meta.current_page - 1;
-          setCurrentTablePage(currentPage);
-        }
-      } catch (error) {
-        alert(error.response?.data?.message);
-      }
-      hideLoader();
-    };
-
-    getUsers();
-    window.scrollTo(0, 0);
-  }, [history, pageSearch]);
-
-  const deleteUserHandler = async (id) => {
+  const deleteAttributeHandler = async (id) => {
     try {
-      const response = await api()("/user/" + id, {
+      const response = await api()("/option/" + id, {
         method: "delete",
       });
 
@@ -86,19 +63,46 @@ const AllUsers = () => {
     }
   };
 
+  useEffect(() => {
+    const getAttributes = async () => {
+      showLoader();
+      try {
+        const response = await api(history)(
+          `/option?filter[name]=${pageSearch.searchTerm}&page=${pageSearch.page}`
+        );
+        console.log(response);
+        if (response && response.data) {
+          setAttributes(response.data.data);
+          setMetaData(response.data.meta);
+          //   setMetaData(response.data.meta);
+          //   const currentPage = response.data.meta.current_page - 1;
+          //   setCurrentTablePage(currentPage);
+        }
+      } catch (error) {
+        alert(error.response.data.message);
+      }
+      hideLoader();
+    };
+
+    getAttributes();
+  }, [history, pageSearch]);
+
   return (
     <div>
-      <TableButtons searchChangeHandler={searchChangeHandler} addNewLink={"/user/create"}/>
-      <UserList
-        users={loadedUsers}
+      <TableButtons
+        searchChangeHandler={searchChangeHandler}
+        addNewLink={"/attribute/create"}
+      />
+        <AttributesList
+        products={attributes}
         loading={isLoading}
         metaData={metaData}
         currentTablePage={currentTablePage}
         pageChangeHandler={pageChangeHandler}
-        deleteUserHandler={deleteUserHandler}
+        deleteAttributeHandler={deleteAttributeHandler}
       />
     </div>
   );
 };
 
-export default AllUsers;
+export default AllAttributes;

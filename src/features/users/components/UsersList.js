@@ -31,21 +31,25 @@ const UsersList = (props) => {
       field: "name",
       headerName: "Name",
       minWidth: 170,
+      flex: 1,
     },
     {
       field: "email",
       headerName: "Email",
       minWidth: 170,
+      flex: 1,
     },
     {
       field: "role",
       headerName: "Role",
       minWidth: 170,
+      flex: 1,
     },
     {
       field: "active",
       headerName: "Status",
-      width: 117,
+      minWidth: 117,
+      flex: 1,
       renderCell: (params) => {
         const label = params.value ? "Active" : "Disabled";
 
@@ -60,35 +64,40 @@ const UsersList = (props) => {
       field: "created_at",
       headerName: "Created At",
       minWidth: 170,
+      flex: 1,
     },
     {
       field: "created_by",
       headerName: "Created By",
       minWidth: 170,
+      flex: 1,
     },
     {
       field: "updated_at",
       headerName: "Updated At",
       minWidth: 170,
+      flex: 1,
     },
     {
       field: "updated_by",
       headerName: "Updated By",
       minWidth: 170,
+      flex: 1,
     },
     {
       field: "deleted_at",
       headerName: "Deleted At",
       minWidth: 170,
+      flex: 1,
       valueGetter: (params) => params.value ?? '/'
     },
     {
       field: "action",
       headerName: "Action",
       minWidth: 214,
+      flex: 1,
       iconSeparator: false,
       renderCell: (params) => {
-        console.log(params);
         return (
           <Box>
             <Link to={"user/" + params.id}>
@@ -98,17 +107,19 @@ const UsersList = (props) => {
             </Link>
             
             <IconButton
-              disabled={params.row.deleted_at}
+              disabled={params.row.deleted_at ? true: false}
               color={params.row.deleted_at ? 'primary' : 'error'}
               aria-label="delete"
               onClick={() => props.deleteUserHandler(params.id)}
             >
               <DeleteOutlineTwoToneIcon/>
             </IconButton>
-           
+
+            <Link to={`user/${params.id}/show`}>
             <IconButton aria-label="view">
               <VisibilityOutlinedIcon color="primary" />
             </IconButton>
+            </Link>
           </Box>
         );
       },

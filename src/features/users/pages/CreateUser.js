@@ -14,9 +14,9 @@ const CreateUser = () => {
     const showLoader = () => {
         setIsLoading(true);
       };
-      const hideLoader = () => {
-        setIsLoading(false);
-      };
+    const hideLoader = () => {
+      setIsLoading(false);
+    };
 
 
     useEffect(() => {
